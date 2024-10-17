@@ -1,6 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from bs4 import BeautifulSoup
-from calendar_utils import create_calendar_with_ds
 import pytz
 import re
 
@@ -12,7 +11,7 @@ def parse_date_time(ds_date_str):
     if match:
         day_name, day, month_name, start_time_str, end_time_str = match.groups()
 
-        # Corrected month map to handle both "nov." and "nov"
+        # Corrected month map for French abbreviations
         month_map = {
             'janv.': 1, 'févr.': 2, 'mars.': 3, 'avr.': 4,
             'mai.': 5, 'juin.': 6, 'juil.': 7, 'août.': 8,
@@ -37,7 +36,7 @@ def parse_date_time(ds_date_str):
         raise ValueError(f"Date string did not match the expected format: {ds_date_str}")
 
 def inspect_html_sections(page_source):
-    """Inspect the HTML to parse DS and Evaluations and generate an .ics calendar."""
+    """Inspect the HTML to parse DS and Evaluations."""
     soup = BeautifulSoup(page_source, 'html.parser')
     ds_list = []
     timezone = pytz.timezone('Africa/Casablanca')  # Set to Morocco's time zone
@@ -85,9 +84,5 @@ def inspect_html_sections(page_source):
                 'location': eval_room,
                 'type': 'Evaluation'  # Label as Evaluation
             })
-
-    # Create the .ics calendar with all exams (DS + Evaluations)
-    if ds_list:
-        create_calendar_with_ds(ds_list)
 
     return ds_list
