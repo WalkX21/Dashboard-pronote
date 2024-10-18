@@ -140,6 +140,7 @@ def add_manual_entry():
 
             # Success message
             st.sidebar.success(f"{ds_type} '{title}' added successfully!")
+            st.rerun()
         else:
             st.sidebar.warning(f"{ds_type} '{title}' already exists in the system!")
 
