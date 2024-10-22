@@ -1,5 +1,5 @@
 from auth import login_and_fetch_html
-from calendar_utils import open_ics_with_calendar
+
 from html_parsing import inspect_html_sections
 
 def main():
@@ -10,7 +10,8 @@ def main():
     inspect_html_sections(page_source)
 
     # Step 3: Automatically open the .ics file in Apple Calendar
-    open_ics_with_calendar()
+
+
 
 if __name__ == "__main__":
     main()

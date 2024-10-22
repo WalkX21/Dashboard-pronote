@@ -5,9 +5,15 @@ import os
 import pytz
 from auth import login_and_fetch_html
 from html_parsing import inspect_html_sections
+from homework_scraping import fetch_and_save_homework
+from html_parsing import fetch_and_save_ds_evals
+
+from utils import save_data, load_data, make_timezone_aware, human_typing, events_are_equal
+
+
 
 # Define the path to the JSON file for storing DS and Evaluations
-DATA_FILE = "ds_evals.json"
+DATA_FILE = "/Users/mbm/Desktop/Web-Scrapping/Dashboard-pronote/ds_evals.json"
 CASABLANCA_TZ = pytz.timezone('Africa/Casablanca')
 
 def make_timezone_aware(dt):
@@ -62,6 +68,33 @@ def fetch_and_update_ds_evals():
 
     # Update session state
     st.session_state['ds_evals'] = current_data
+
+def add_manual_homework():
+    """Form to manually add a homework entry."""
+    st.write("### Add New Homework")
+
+    subject = st.text_input("Subject", key="homework_subject")
+    title = st.text_input("Title", key="homework_title")
+    due_date = st.date_input("Due Date", datetime.now(), key="homework_due_date")
+    importance = st.selectbox("Importance", ["High", "Normal", "Low"], key="homework_importance")
+
+    if st.button("Add Homework", key="add_homework_button"):
+        # Store the new homework entry in the homework.json file
+        current_homework = load_data("homework.json")
+        
+        new_homework = {
+            'subject': subject,
+            'title': title,
+            'due_date': make_timezone_aware(datetime.combine(due_date, datetime.min.time())).isoformat(),
+            'importance': importance
+        }
+        
+        current_homework.append(new_homework)
+        save_data("homework.json", current_homework)
+
+        st.success(f"Homework '{title}' added successfully!")
+        st.rerun()
+
 
 def display_ds_evals():
     """Display all DS and Evaluations."""
@@ -144,15 +177,68 @@ def add_manual_entry():
         else:
             st.sidebar.warning(f"{ds_type} '{title}' already exists in the system!")
 
+def display_homework():
+    """Display all homework stored in homework.json."""
+    homework = load_data("homework.json")
+
+    # Make current_time timezone-aware (adjust timezone as needed)
+    timezone = pytz.timezone('Africa/Casablanca')
+    current_time = datetime.now(timezone)
+
+    if homework:
+        st.write("### Upcoming Homework")
+
+        for hw in homework:
+            hw_due = datetime.fromisoformat(hw['due_date'])
+            
+            # Ensure both hw_due and current_time are timezone-aware
+            if hw_due.tzinfo is None:
+                hw_due = timezone.localize(hw_due)
+
+            # Compare timezone-aware datetimes
+            if hw_due >= current_time:
+                st.write(f"**{hw['subject']} - {hw['title']}**")
+                st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
+                st.write(f"Importance: {hw['importance']}")
+                st.write("---")
+    else:
+        st.warning("No upcoming homework found.")
+
+if 'scraped' not in st.session_state:
+    st.session_state['scraped'] = False  # To track if scraping was done
+
 def main():
     st.title("Pronote DS and Evaluation Dashboard")
-    st.write("Welcome to the Pronote Dashboard!")
+    if not st.session_state['scraped']:
+        page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
+        # Scrape DS and Evaluations
+        fetch_and_save_ds_evals(page_source)
 
-    # Automatically load and display DS and Evaluations without needing a button
-    display_ds_evals()
+        # Scrape Homework
+        fetch_and_save_homework(page_source)
 
-    # Form for adding a new DS or Evaluation
-    add_manual_entry()
+        # Mark that scraping has been done in this session
+        st.session_state['scraped'] = True
+
+
+    # Create two columns for layout
+    col1, col2 = st.columns(2)
+
+    # Column 1: DS and Evaluations
+    with col1:
+        st.write("## DS and Evaluations")
+        display_ds_evals()  # Display the DS/Evals
+        st.write("### Add New DS or Evaluation")
+        add_manual_entry()  # Function to add manual DS/Eval entries
+
+
+    # Column 2: Homework
+    with col2:
+        st.write("## Homework")
+        display_homework()  # Display the homework
+        st.write("### Add New Homework")
+        add_manual_homework()  # Form for adding manual homework
+
 
 if __name__ == "__main__":
     main()

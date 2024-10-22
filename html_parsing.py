@@ -1,5 +1,7 @@
 from datetime import datetime
 from bs4 import BeautifulSoup
+from utils import save_data, load_data, make_timezone_aware
+from datetime import datetime
 import pytz
 import re
 
@@ -86,3 +88,70 @@ def inspect_html_sections(page_source):
             })
 
     return ds_list
+
+DS_EVAL_FILE = "ds_evals.json"
+
+def scrape_ds_evals(page_source):
+    """Scrape DS and Evaluations from Pronote HTML."""
+    soup = BeautifulSoup(page_source, 'html.parser')
+    ds_evals_list = []
+
+    # Locate the DS section and Evaluation section in the HTML (adjust IDs if necessary)
+    ds_section = soup.find("section", {"id": "id_69"})  # Adjust the ID if needed for DS
+    if ds_section:
+        ds_items = ds_section.find_all("li")
+        for ds_item in ds_items:
+            subject = ds_item.find("h3").get_text(strip=True)
+            date_str = ds_item.find("span", class_="date").get_text(strip=True)
+            room = ds_item.find("span", class_=False).get_text(strip=True)
+            
+            # Assume parse_date_time function parses date/time info from the string
+            start_time, end_time = parse_date_time(date_str)
+            start_time = make_timezone_aware(start_time)
+            end_time = make_timezone_aware(end_time)
+
+            ds_evals_list.append({
+                'subject': subject,
+                'start_time': start_time.isoformat(),
+                'end_time': end_time.isoformat(),
+                'location': room,
+                'type': 'DS'  # Label as DS
+            })
+
+    # Do the same for Evaluations if they have a separate section
+    eval_section = soup.find("section", {"id": "id_74"})  # Adjust the ID if needed for Evaluations
+    if eval_section:
+        eval_items = eval_section.find_all("li")
+        for eval_item in eval_items:
+            subject = eval_item.find("h3").get_text(strip=True)
+            date_str = eval_item.find("span", class_="date").get_text(strip=True)
+            room = eval_item.find("span", class_=False).get_text(strip=True)
+
+            start_time, end_time = parse_date_time(date_str)
+            start_time = make_timezone_aware(start_time)
+            end_time = make_timezone_aware(end_time)
+
+            ds_evals_list.append({
+                'subject': subject,
+                'start_time': start_time.isoformat(),
+                'end_time': end_time.isoformat(),
+                'location': room,
+                'type': 'Evaluation'  # Label as Evaluation
+            })
+
+    return ds_evals_list
+
+def fetch_and_save_ds_evals(page_source):
+    """Fetch DS and Evaluations and save to ds_evals.json."""
+    ds_evals_list = scrape_ds_evals(page_source)
+
+    # Load existing data to avoid overwriting
+    current_ds_evals = load_data(DS_EVAL_FILE)
+
+    # Add new DS/Evaluations entries, avoid duplicates
+    for ds in ds_evals_list:
+        if ds not in current_ds_evals:
+            current_ds_evals.append(ds)
+
+    # Save updated DS/Evaluations data
+    save_data(DS_EVAL_FILE, current_ds_evals)
