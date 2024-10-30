@@ -51,3 +51,19 @@ def parse_datetime_string(date_str):
     except ValueError as e:
         print(f"Error parsing date string: {e}")
         return None
+
+
+import json
+
+def load_json(filename):
+    """Load data from a JSON file."""
+    try:
+        with open(filename, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+
+def save_json(filename, data):
+    """Save data to a JSON file."""
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)

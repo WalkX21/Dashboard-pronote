@@ -7,10 +7,11 @@ from auth import login_and_fetch_html
 from html_parsing import inspect_html_sections
 from homework_scraping import fetch_and_save_homework
 from html_parsing import fetch_and_save_ds_evals
+from utils import save_json, load_json
 
 from utils import save_data, load_data, make_timezone_aware, human_typing, events_are_equal
 
-
+st.set_page_config(page_title="Accueil", page_icon="📚", layout="wide")
 
 # Define the path to the JSON file for storing DS and Evaluations
 DATA_FILE = "/Users/mbm/Desktop/Web-Scrapping/Dashboard-pronote/ds_evals.json"
@@ -69,31 +70,60 @@ def fetch_and_update_ds_evals():
     # Update session state
     st.session_state['ds_evals'] = current_data
 
+# def add_manual_homework():
+#     """Form to manually add a homework entry."""
+#     st.write("### Add New Homework")
+
+#     subject = st.text_input("Subject", key="homework_subject")
+#     title = st.text_input("Title", key="homework_title")
+#     due_date = st.date_input("Due Date", datetime.now(), key="homework_due_date")
+#     importance = st.selectbox("Importance", ["High", "Normal", "Low"], key="homework_importance")
+
+#     if st.button("Add Homework", key="add_homework_button"):
+#         # Store the new homework entry in the homework.json file
+#         current_homework = load_data("homework.json")
+        
+#         new_homework = {
+#             'subject': subject,
+#             'title': title,
+#             'due_date': make_timezone_aware(datetime.combine(due_date, datetime.min.time())).isoformat(),
+#             'importance': importance
+#         }
+        
+#         current_homework.append(new_homework)
+#         save_data("homework.json", current_homework)
+
+#         st.success(f"Homework '{title}' added successfully!")
+#         st.rerun()
+
 def add_manual_homework():
-    """Form to manually add a homework entry."""
+    """Form to manually add a homework."""
     st.write("### Add New Homework")
 
-    subject = st.text_input("Subject", key="homework_subject")
-    title = st.text_input("Title", key="homework_title")
-    due_date = st.date_input("Due Date", datetime.now(), key="homework_due_date")
-    importance = st.selectbox("Importance", ["High", "Normal", "Low"], key="homework_importance")
-
-    if st.button("Add Homework", key="add_homework_button"):
-        # Store the new homework entry in the homework.json file
-        current_homework = load_data("homework.json")
-        
+    # Subject, title, due date input
+    subject = st.text_input("Subject")
+    title = st.text_input("Title")
+    due_date = st.date_input("Due Date", datetime.now().date())
+    # importance = st.slider("Importance (1-5)", 1, 5, 1)
+    importance = st.selectbox("Importance", options=["High", "Normal", "Low"])
+    if st.button("Add Homework"):
+        # New homework entry with status 'Pending'
         new_homework = {
             'subject': subject,
             'title': title,
-            'due_date': make_timezone_aware(datetime.combine(due_date, datetime.min.time())).isoformat(),
-            'importance': importance
+            'due_date': due_date.isoformat(),
+            'importance': importance,
+            'status': 'Pending'  # All homework starts as Pending
         }
-        
-        current_homework.append(new_homework)
-        save_data("homework.json", current_homework)
+
+        # Load existing homework data
+        homework_data = load_json("homework.json")
+
+        # Append the new homework and save back to the file
+        homework_data.append(new_homework)
+        save_json("homework.json", homework_data)
 
         st.success(f"Homework '{title}' added successfully!")
-        st.rerun()
 
 
 def display_ds_evals():
@@ -127,24 +157,76 @@ def display_ds_evals():
     else:
         st.warning("No exams (DS or Evaluations) found.")
 
+# def add_manual_entry():
+#     """Form to manually add DS or Evaluation."""
+#     st.sidebar.title("Add New DS or Evaluation")
+
+#     # Type selector
+#     ds_type = st.sidebar.selectbox("Type", ["DS", "Evaluation"])
+
+#     # Date and time picker
+#     start_date = st.sidebar.date_input("Start Date", datetime.now().date())
+#     start_time = st.sidebar.time_input("Start Time", datetime.now())
+#     duration = st.sidebar.slider("Duration (hours)", 1, 6, 1)  # Slider for duration
+
+#     # Title and location input
+#     title = st.sidebar.text_input("Title")
+#     location = st.sidebar.text_input("Location")
+
+#     # We only update the DS list when the user clicks "Add Entry"
+#     if st.sidebar.button("Add Entry"):
+#         start_datetime = datetime.combine(start_date, start_time)
+#         start_datetime = make_timezone_aware(start_datetime)  # Make start time timezone-aware
+#         end_datetime = start_datetime + timedelta(hours=duration)
+
+#         # Create the new DS or Evaluation entry
+#         new_entry = {
+#             'subject': title,
+#             'start_time': start_datetime.isoformat(),
+#             'end_time': end_datetime.isoformat(),
+#             'location': location,
+#             'type': ds_type
+#         }
+
+#         # Load current data from JSON
+#         current_data = load_ds_evals()
+
+#         # Add the new entry to the current data, avoiding duplicates
+#         if not is_duplicate_entry(new_entry, current_data):
+#             current_data.append(new_entry)
+
+#             # Save the updated data back to JSON
+#             save_ds_evals(current_data)
+
+#             # Update session state
+#             st.session_state['ds_evals'] = current_data
+
+#             # Success message
+#             st.sidebar.success(f"{ds_type} '{title}' added successfully!")
+#             st.rerun()
+#         else:
+#             st.sidebar.warning(f"{ds_type} '{title}' already exists in the system!")
+
+
 def add_manual_entry():
     """Form to manually add DS or Evaluation."""
-    st.sidebar.title("Add New DS or Evaluation")
+    st.write("## Add New DS or Evaluation")
 
-    # Type selector
-    ds_type = st.sidebar.selectbox("Type", ["DS", "Evaluation"])
+    # Type selector (DS or Evaluation)
+    ds_type = st.selectbox("Type", ["DS", "Evaluation"])
 
     # Date and time picker
-    start_date = st.sidebar.date_input("Start Date", datetime.now().date())
-    start_time = st.sidebar.time_input("Start Time", datetime.now())
-    duration = st.sidebar.slider("Duration (hours)", 1, 6, 1)  # Slider for duration
+    start_date = st.date_input("Start Date", datetime.now().date())
+    start_time = st.time_input("Start Time", datetime.now())
+    duration = st.slider("Duration (hours)", 1, 6, 1)  # Slider for duration
 
     # Title and location input
-    title = st.sidebar.text_input("Title")
-    location = st.sidebar.text_input("Location")
+    title = st.text_input("Title")
+    location = st.text_input("Location")
 
-    # We only update the DS list when the user clicks "Add Entry"
-    if st.sidebar.button("Add Entry"):
+    # Button to submit and add the entry
+    if st.button("Add Entry"):
+        # Combine the start date and time into a single datetime object
         start_datetime = datetime.combine(start_date, start_time)
         start_datetime = make_timezone_aware(start_datetime)  # Make start time timezone-aware
         end_datetime = start_datetime + timedelta(hours=duration)
@@ -172,47 +254,126 @@ def add_manual_entry():
             st.session_state['ds_evals'] = current_data
 
             # Success message
-            st.sidebar.success(f"{ds_type} '{title}' added successfully!")
-            st.rerun()
+            st.success(f"{ds_type} '{title}' added successfully!")
+            st.rerun()  # Re-run to update the page
         else:
-            st.sidebar.warning(f"{ds_type} '{title}' already exists in the system!")
+            st.warning(f"{ds_type} '{title}' already exists in the system!")
+
+
+# def display_homework():
+#     """Display all homework stored in homework.json."""
+#     homework = load_data("homework.json")
+
+#     # Make current_time timezone-aware (adjust timezone as needed)
+#     timezone = pytz.timezone('Africa/Casablanca')
+#     current_time = datetime.now(timezone)
+
+#     if homework:
+#         st.write("### Upcoming Homework")
+
+#         for hw in homework:
+#             hw_due = datetime.fromisoformat(hw['due_date'])
+            
+#             # Ensure both hw_due and current_time are timezone-aware
+#             if hw_due.tzinfo is None:
+#                 hw_due = timezone.localize(hw_due)
+
+#             # Compare timezone-aware datetimes
+#             if hw_due >= current_time:
+#                 st.write(f"**{hw['subject']} - {hw['title']}**")
+#                 st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
+#                 st.write(f"Importance: {hw['importance']}")
+#                 st.write("---")
+#     else:
+#         st.warning("No upcoming homework found.")
+
+# if 'scraped' not in st.session_state:
+#     st.session_state['scraped'] = False  # To track if scraping was done
+
+
+
+
 
 def display_homework():
-    """Display all homework stored in homework.json."""
+    """Display all homework stored in homework.json, ensuring no duplicates are shown."""
+    
+    # Load the homework data from the JSON file
     homework = load_data("homework.json")
 
     # Make current_time timezone-aware (adjust timezone as needed)
     timezone = pytz.timezone('Africa/Casablanca')
     current_time = datetime.now(timezone)
 
-    if homework:
-        st.write("### Upcoming Homework")
+    # Ensure every homework entry has a 'status' field
+    for hw in homework:
+        if 'status' not in hw:
+            hw['status'] = 'Not Done'  # Default status is 'Not Done'
 
-        for hw in homework:
+    # Remove duplicates: Create a unique set based on 'subject', 'title', and 'due_date'
+    unique_homework = []
+    seen_entries = set()  # To keep track of seen (subject, title, due_date) combinations
+
+    for hw in homework:
+        identifier = (hw['subject'], hw['title'], hw['due_date'])
+        if identifier not in seen_entries:
+            seen_entries.add(identifier)
+            unique_homework.append(hw)
+
+    if unique_homework:
+        # Sort homework by due date and status ('Not Done' first, 'Done' last)
+        def sort_key(hw):
             hw_due = datetime.fromisoformat(hw['due_date'])
-            
+            if hw_due.tzinfo is None:
+                hw_due = timezone.localize(hw_due)
+            return (hw['status'] == 'Done', hw_due)  # 'Done' status will be sorted last
+
+        # Sort by status and due date
+        unique_homework.sort(key=sort_key)
+
+        st.write("### Upcoming Homework (Sorted by Date and Status)")
+
+        for i, hw in enumerate(unique_homework):
+            hw_due = datetime.fromisoformat(hw['due_date'])
+
             # Ensure both hw_due and current_time are timezone-aware
             if hw_due.tzinfo is None:
                 hw_due = timezone.localize(hw_due)
 
-            # Compare timezone-aware datetimes
-            if hw_due >= current_time:
-                st.write(f"**{hw['subject']} - {hw['title']}**")
-                st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
-                st.write(f"Importance: {hw['importance']}")
-                st.write("---")
+            # Add a checkbox for homework status with unique keys using enumerate
+            is_done = hw.get('status', 'Not Done') == 'Done'
+            checkbox_label = f"{hw['subject']} - {hw['title']}"
+            if st.checkbox(checkbox_label, value=is_done, key=f"{hw['title']}_{i}"):
+                hw['status'] = 'Done'
+            else:
+                hw['status'] = 'Not Done'
+
+            # Display details of the homework
+            st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
+            st.write(f"Importance: {hw['importance']}")
+            st.write("---")
+
+        # Save the updated homework status back to the JSON file
+        save_data("homework.json", unique_homework)
     else:
         st.warning("No upcoming homework found.")
 
-if 'scraped' not in st.session_state:
-    st.session_state['scraped'] = False  # To track if scraping was done
+
+
 
 def main():
-    st.title("Pronote DS and Evaluation Dashboard")
+    st.title("Pronify beta ver 2.0")
+    if 'scraped' not in st.session_state:
+        st.session_state['scraped'] = False  # To track if scraping was done
+
+    # Check if scraping is done
     if not st.session_state['scraped']:
+        st.write("Scraping data...")
+        # Add your scraping logic here
         page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
         # Scrape DS and Evaluations
         fetch_and_save_ds_evals(page_source)
+        # For example: page_source = login_and_fetch_html()  # Set to True after scraping is done
+
 
         # Scrape Homework
         fetch_and_save_homework(page_source)
@@ -229,7 +390,7 @@ def main():
         st.write("## DS and Evaluations")
         display_ds_evals()  # Display the DS/Evals
         st.write("### Add New DS or Evaluation")
-        add_manual_entry()  # Function to add manual DS/Eval entries
+        # add_manual_entry()  # Function to add manual DS/Eval entries
 
 
     # Column 2: Homework
@@ -237,7 +398,7 @@ def main():
         st.write("## Homework")
         display_homework()  # Display the homework
         st.write("### Add New Homework")
-        add_manual_homework()  # Form for adding manual homework
+        # add_manual_homework()  # Form for adding manual homework
 
 
 if __name__ == "__main__":
