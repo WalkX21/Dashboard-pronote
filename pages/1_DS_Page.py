@@ -5,6 +5,12 @@ import dashboard
 
 st.set_page_config(page_title="DS/Evaluations", page_icon="📅", layout="wide")
 
+
+if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
+    st.warning("You must be logged in to access this page.")
+    st.stop()  # Prevents the rest of the page from loading if not authenticated
+
+
 st.write("# Manage DS and Evaluations")
 
 col1, col2 = st.columns([1, 2])

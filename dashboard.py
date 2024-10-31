@@ -14,8 +14,71 @@ from utils import save_data, load_data, make_timezone_aware, human_typing, event
 st.set_page_config(page_title="Accueil", page_icon="📚", layout="wide")
 
 # Define the path to the JSON file for storing DS and Evaluations
+
+CONFIG_PATH = "config.json"
 DATA_FILE = "/Users/mbm/Desktop/Web-Scrapping/Dashboard-pronote/ds_evals.json"
 CASABLANCA_TZ = pytz.timezone('Africa/Casablanca')
+
+
+def load_config():
+    """Load configuration from config.json, handling cases where the file may be empty or malformed."""
+    if os.path.exists(CONFIG_PATH):
+        try:
+            with open(CONFIG_PATH, "r") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            return {}  # Return an empty dictionary if JSON is invalid or empty
+    return {}
+
+def save_config(data):
+    """Save configuration data to config.json."""
+    with open(CONFIG_PATH, "w") as f:
+        json.dump(data, f, indent=4)
+
+def is_user_registered():
+    """Check if user data is already in config.json."""
+    config = load_config()
+    return "user_id" in config and "key" in config
+def signup_page():
+    st.title("Sign Up")
+    st.write("Please register your ID and Pronote credentials.")
+    
+    # Collect data for the config.json
+    user_id = st.text_input("User ID")
+    key = st.text_input("Key (Password)", type="password")
+    pronote_username = st.text_input("Pronote Username")
+    pronote_password = st.text_input("Pronote Password", type="password")
+
+    if st.button("Sign Up"):
+        if user_id and key and pronote_username and pronote_password:
+            # Save data to config.json
+            save_config({
+                "user_id": user_id,
+                "key": key,
+                "USERNAME": pronote_username,
+                "PASSWORD": pronote_password
+            })
+            st.success("Sign-up successful! Please log in.")
+            st.rerun()
+        else:
+            st.warning("Please fill in all fields.")
+
+def login_page():
+    st.title("Login")
+    st.write("Please enter your ID and key to access the dashboard.")
+
+    # Collect login credentials
+    user_id = st.text_input("User ID")
+    key = st.text_input("Key (Password)", type="password")
+
+    if st.button("Login"):
+        config = load_config()
+        if user_id == config.get("user_id") and key == config.get("key"):
+            st.success("Login successful!")
+            st.session_state["authenticated"] = True
+            st.rerun()
+        else:
+            st.error("Invalid ID or key. Please try again.")
 
 def make_timezone_aware(dt):
     """Convert naive datetime to timezone-aware using the Casablanca timezone."""
@@ -253,47 +316,59 @@ def display_homework():
         st.warning("No upcoming homework found.")
 
 
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
 
-
+    
 def main():
     st.title("Pronify beta ver 2.0")
-    if 'scraped' not in st.session_state:
-        st.session_state['scraped'] = False  # To track if scraping was done
+
+
+
+    if not st.session_state["authenticated"]:
+        if is_user_registered():
+            login_page()
+        else:
+            signup_page()
+    else:
+
+        if 'scraped' not in st.session_state:
+            st.session_state['scraped'] = False  # To track if scraping was done
 
     # Check if scraping is done
-    if not st.session_state['scraped']:
-        st.write("Scraping data...")
-        # Add your scraping logic here
-        page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
-        # Scrape DS and Evaluations
-        fetch_and_save_ds_evals(page_source)
-        # For example: page_source = login_and_fetch_html()  # Set to True after scraping is done
+        if not st.session_state['scraped']:
+            st.write("Scraping data...")
+            # Add your scraping logic here
+            page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
+            # Scrape DS and Evaluations
+            fetch_and_save_ds_evals(page_source)
+            # For example: page_source = login_and_fetch_html()  # Set to True after scraping is done
 
 
-        # Scrape Homework
-        fetch_and_save_homework(page_source)
+            # Scrape Homework
+            fetch_and_save_homework(page_source)
 
-        # Mark that scraping has been done in this session
-        st.session_state['scraped'] = True
-
-
-    # Create two columns for layout
-    col1, col2 = st.columns(2)
-
-    # Column 1: DS and Evaluations
-    with col1:
-        st.write("## DS and Evaluations")
-        display_ds_evals()  # Display the DS/Evals
-        st.write("### Add New DS or Evaluation")
-        # add_manual_entry()  # Function to add manual DS/Eval entries
+            # Mark that scraping has been done in this session
+            st.session_state['scraped'] = True
 
 
-    # Column 2: Homework
-    with col2:
-        st.write("## Homework")
-        display_homework()  # Display the homework
-        st.write("### Add New Homework")
-        # add_manual_homework()  # Form for adding manual homework
+        # Create two columns for layout
+        col1, col2 = st.columns(2)
+
+        # Column 1: DS and Evaluations
+        with col1:
+            st.write("## DS and Evaluations")
+            display_ds_evals()  # Display the DS/Evals
+            st.write("### Add New DS or Evaluation")
+            # add_manual_entry()  # Function to add manual DS/Eval entries
+
+
+        # Column 2: Homework
+        with col2:
+            st.write("## Homework")
+            display_homework()  # Display the homework
+            st.write("### Add New Homework")
+            # add_manual_homework()  # Form for adding manual homework
 
 
 if __name__ == "__main__":

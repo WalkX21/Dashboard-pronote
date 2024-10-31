@@ -5,6 +5,11 @@ import dashboard
 # Ensure set_page_config is the first thing called
 st.set_page_config(page_title="Homework", page_icon="📓")
 
+if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
+    st.warning("You must be logged in to access this page.")
+    st.stop()  # Stops the rest of the page from loading if not authenticated
+
+
 st.write("# Manage Homework")
 
 col1, col2 = st.columns([1, 2])
