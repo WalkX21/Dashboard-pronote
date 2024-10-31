@@ -1,6 +1,9 @@
 from auth import login_and_fetch_html
-
+import streamlit as st
 from html_parsing import inspect_html_sections
+
+
+
 
 def main():
     # Step 1: Log in and fetch the HTML (update the file each time)

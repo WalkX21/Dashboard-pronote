@@ -9,6 +9,7 @@ from utils import human_typing
 
 URL = 'https://3500044w.index-education.net/pronote/eleve.html'
 
+
 def login_and_fetch_html():
     """Login to Pronote and save the page HTML to a file."""
     
@@ -36,7 +37,7 @@ def login_and_fetch_html():
     time.sleep(random.uniform(3, 5))
     
     # Load credentials from a local JSON file
-    with open('/Users/mbm/Desktop/Web-Scrapping/Web-scrapping-basics/config.json') as configFile:
+    with open('config.json') as configFile:
         credentials = json.load(configFile)
         
         # Locate username and password input fields and perform "human-like" typing

@@ -70,31 +70,6 @@ def fetch_and_update_ds_evals():
     # Update session state
     st.session_state['ds_evals'] = current_data
 
-# def add_manual_homework():
-#     """Form to manually add a homework entry."""
-#     st.write("### Add New Homework")
-
-#     subject = st.text_input("Subject", key="homework_subject")
-#     title = st.text_input("Title", key="homework_title")
-#     due_date = st.date_input("Due Date", datetime.now(), key="homework_due_date")
-#     importance = st.selectbox("Importance", ["High", "Normal", "Low"], key="homework_importance")
-
-#     if st.button("Add Homework", key="add_homework_button"):
-#         # Store the new homework entry in the homework.json file
-#         current_homework = load_data("homework.json")
-        
-#         new_homework = {
-#             'subject': subject,
-#             'title': title,
-#             'due_date': make_timezone_aware(datetime.combine(due_date, datetime.min.time())).isoformat(),
-#             'importance': importance
-#         }
-        
-#         current_homework.append(new_homework)
-#         save_data("homework.json", current_homework)
-
-#         st.success(f"Homework '{title}' added successfully!")
-#         st.rerun()
 
 def add_manual_homework():
     """Form to manually add a homework."""
@@ -157,55 +132,6 @@ def display_ds_evals():
     else:
         st.warning("No exams (DS or Evaluations) found.")
 
-# def add_manual_entry():
-#     """Form to manually add DS or Evaluation."""
-#     st.sidebar.title("Add New DS or Evaluation")
-
-#     # Type selector
-#     ds_type = st.sidebar.selectbox("Type", ["DS", "Evaluation"])
-
-#     # Date and time picker
-#     start_date = st.sidebar.date_input("Start Date", datetime.now().date())
-#     start_time = st.sidebar.time_input("Start Time", datetime.now())
-#     duration = st.sidebar.slider("Duration (hours)", 1, 6, 1)  # Slider for duration
-
-#     # Title and location input
-#     title = st.sidebar.text_input("Title")
-#     location = st.sidebar.text_input("Location")
-
-#     # We only update the DS list when the user clicks "Add Entry"
-#     if st.sidebar.button("Add Entry"):
-#         start_datetime = datetime.combine(start_date, start_time)
-#         start_datetime = make_timezone_aware(start_datetime)  # Make start time timezone-aware
-#         end_datetime = start_datetime + timedelta(hours=duration)
-
-#         # Create the new DS or Evaluation entry
-#         new_entry = {
-#             'subject': title,
-#             'start_time': start_datetime.isoformat(),
-#             'end_time': end_datetime.isoformat(),
-#             'location': location,
-#             'type': ds_type
-#         }
-
-#         # Load current data from JSON
-#         current_data = load_ds_evals()
-
-#         # Add the new entry to the current data, avoiding duplicates
-#         if not is_duplicate_entry(new_entry, current_data):
-#             current_data.append(new_entry)
-
-#             # Save the updated data back to JSON
-#             save_ds_evals(current_data)
-
-#             # Update session state
-#             st.session_state['ds_evals'] = current_data
-
-#             # Success message
-#             st.sidebar.success(f"{ds_type} '{title}' added successfully!")
-#             st.rerun()
-#         else:
-#             st.sidebar.warning(f"{ds_type} '{title}' already exists in the system!")
 
 
 def add_manual_entry():
@@ -258,37 +184,6 @@ def add_manual_entry():
             st.rerun()  # Re-run to update the page
         else:
             st.warning(f"{ds_type} '{title}' already exists in the system!")
-
-
-# def display_homework():
-#     """Display all homework stored in homework.json."""
-#     homework = load_data("homework.json")
-
-#     # Make current_time timezone-aware (adjust timezone as needed)
-#     timezone = pytz.timezone('Africa/Casablanca')
-#     current_time = datetime.now(timezone)
-
-#     if homework:
-#         st.write("### Upcoming Homework")
-
-#         for hw in homework:
-#             hw_due = datetime.fromisoformat(hw['due_date'])
-            
-#             # Ensure both hw_due and current_time are timezone-aware
-#             if hw_due.tzinfo is None:
-#                 hw_due = timezone.localize(hw_due)
-
-#             # Compare timezone-aware datetimes
-#             if hw_due >= current_time:
-#                 st.write(f"**{hw['subject']} - {hw['title']}**")
-#                 st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
-#                 st.write(f"Importance: {hw['importance']}")
-#                 st.write("---")
-#     else:
-#         st.warning("No upcoming homework found.")
-
-# if 'scraped' not in st.session_state:
-#     st.session_state['scraped'] = False  # To track if scraping was done
 
 
 

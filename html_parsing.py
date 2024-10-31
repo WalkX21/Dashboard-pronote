@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 import re
 
+
 def parse_date_time(ds_date_str):
     """Parse the date and time from strings like 'Le jeudi 7 nov. de 11h00 à 12h00'."""
     pattern = r"Le (\w+) (\d+) (\w+)\.? de (\d+h\d+) à (\d+h\d+)"
