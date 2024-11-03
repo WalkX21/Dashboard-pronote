@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import json
 import os
 import pytz
+from streamlit.components.v1 import html
+import pandas as pd
 from auth import login_and_fetch_html
 from html_parsing import inspect_html_sections
 from homework_scraping import fetch_and_save_homework
@@ -14,10 +16,109 @@ from utils import save_data, load_data, make_timezone_aware, human_typing, event
 st.set_page_config(page_title="Accueil", page_icon="📚", layout="wide")
 
 # Define the path to the JSON file for storing DS and Evaluations
-
+MOOD_DATA_FILE = "mood_data.csv"
 CONFIG_PATH = "config.json"
 DATA_FILE = "/Users/mbm/Desktop/Web-Scrapping/Dashboard-pronote/ds_evals.json"
 CASABLANCA_TZ = pytz.timezone('Africa/Casablanca')
+
+
+def save_mood(mood):
+    """Save the mood with the current date and time to a CSV file."""
+    data = {
+        "timestamp": [datetime.now()],
+        "mood": [mood]
+    }
+    mood_df = pd.DataFrame(data)
+    if os.path.exists(MOOD_DATA_FILE):
+        mood_df.to_csv(MOOD_DATA_FILE, mode='a', header=False, index=False)
+    else:
+        mood_df.to_csv(MOOD_DATA_FILE, index=False)
+
+def show_mood_tracker():
+    """Display the mood tracker page and record the selected mood."""
+    st.title("Comment vous sentez-vous ?")
+
+    # Define each face emoji and its label
+    faces = {
+        "Très mal": "🙁",
+        "Mal": "😟",
+        "Neutre": "😐",
+        "Bien": "🙂",
+        "Très bien": "😄"
+    }
+
+    if "selected_mood" not in st.session_state:
+        st.session_state["selected_mood"] = None
+
+    html_code = """
+    <style>
+        .emoji-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        .emoji-button {
+            font-size: 80px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+        }
+        .emoji-button:hover {
+            transform: scale(1.2);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+
+    <div class="emoji-container">
+    """
+
+    for label, emoji in faces.items():
+        html_code += f"""
+        <div class="emoji-button" onclick="selectEmoji('{label}')">{emoji}</div>
+        """
+
+    html_code += """
+    </div>
+
+    <script>
+        function selectEmoji(face) {
+            const streamlitDiv = window.parent.document.getElementsByClassName("stMarkdown")[0];
+            streamlitDiv.innerHTML = face;
+            window.parent.postMessage({ type: "streamlit:setComponentValue", mood: face }, "*");
+        }
+    </script>
+    """
+
+    html(html_code, height=600)
+
+    # Display the selected mood and save it
+    if st.session_state["selected_mood"]:
+        st.write(f"Vous avez choisi : {st.session_state['selected_mood']}")
+        if st.button("Confirmer"):
+            save_mood(st.session_state["selected_mood"])
+            st.session_state["mood_selected_today"] = True  # Mark as completed
+            st.experimental_rerun()
+    else:
+        st.write("Cliquez sur un visage pour sélectionner votre humeur.")
+
+    # Capture the selected mood through JavaScript message handling
+    st.markdown(
+        """
+        <script>
+            window.addEventListener("message", (event) => {
+                if (event.data.type === "streamlit:setComponentValue") {
+                    const mood = event.data.mood;
+                    window.parent.postMessage({ type: "streamlit:setComponentValue", value: mood }, "*");
+                }
+            });
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if "mood" in st.session_state:
+        st.session_state["selected_mood"] = st.session_state["mood"]
 
 
 def load_config():
@@ -369,6 +470,8 @@ def main():
             display_homework()  # Display the homework
             st.write("### Add New Homework")
             # add_manual_homework()  # Form for adding manual homework
+
+
 
 
 if __name__ == "__main__":
