@@ -265,24 +265,63 @@ def add_manual_homework():
         st.success(f"Homework '{title}' added successfully!")
 
 
-def display_ds_evals():
-    """Display all DS and Evaluations."""
+# def display_ds_evals():
+    # """Display all DS and Evaluations."""
+    # if 'ds_evals' not in st.session_state:
+    #     st.session_state['ds_evals'] = load_ds_evals()
+
+    # # Ensure all datetimes are timezone-aware
+    # for ds in st.session_state['ds_evals']:
+    #     ds['start_time'] = make_timezone_aware(ds['start_time'])
+    #     ds['end_time'] = make_timezone_aware(ds['end_time'])
+
+    # # Sort by start time
+    # st.session_state['ds_evals'].sort(key=lambda x: x['start_time'])
+
+    # # Display DS and Evaluations
+    # if st.session_state['ds_evals']:
+    #     st.write("### Exams (DS and Evaluations) Found:")
+    #     for ds in st.session_state['ds_evals']:
+    #         ds_type = ds['type']  # 'DS' or 'Evaluation'
+    #         ds_title = ds['subject']
+    #         ds_start = ds['start_time'].strftime("%Y-%m-%d %H:%M")
+    #         ds_end = ds['end_time'].strftime("%Y-%m-%d %H:%M")
+    #         ds_room = ds['location']
+
+    #         st.write(f"**[{ds_type}] {ds_title}**")
+    #         st.write(f"🗓 Start: {ds_start}")
+    #         st.write(f"🕔 End: {ds_end}")
+    #         st.write(f"📍 Location: {ds_room}")
+    #         st.write("---")
+    # else:
+    #     st.warning("No exams (DS or Evaluations) found.")
+
+def display_ds_evals(show_week_only=False):
+    """Display upcoming DS and Evaluations only."""
     if 'ds_evals' not in st.session_state:
         st.session_state['ds_evals'] = load_ds_evals()
 
-    # Ensure all datetimes are timezone-aware
+    # Ensure datetimes are timezone-aware
+    timezone = pytz.timezone('Africa/Casablanca')
+    current_time = datetime.now(timezone)
+    end_of_week = current_time + timedelta(days=7) if show_week_only else None
+
+    # Filter and sort by start time
+    upcoming_ds_evals = []
     for ds in st.session_state['ds_evals']:
         ds['start_time'] = make_timezone_aware(ds['start_time'])
         ds['end_time'] = make_timezone_aware(ds['end_time'])
+        if ds['start_time'] >= current_time and (end_of_week is None or ds['start_time'] <= end_of_week):
+            upcoming_ds_evals.append(ds)
 
-    # Sort by start time
-    st.session_state['ds_evals'].sort(key=lambda x: x['start_time'])
+    # Sort the filtered list by start time
+    upcoming_ds_evals.sort(key=lambda x: x['start_time'])
 
-    # Display DS and Evaluations
-    if st.session_state['ds_evals']:
-        st.write("### Exams (DS and Evaluations) Found:")
-        for ds in st.session_state['ds_evals']:
-            ds_type = ds['type']  # 'DS' or 'Evaluation'
+    # Display filtered DS and Evaluations
+    if upcoming_ds_evals:
+        st.write("### Upcoming Exams (DS and Evaluations):")
+        for ds in upcoming_ds_evals:
+            ds_type = ds['type']
             ds_title = ds['subject']
             ds_start = ds['start_time'].strftime("%Y-%m-%d %H:%M")
             ds_end = ds['end_time'].strftime("%Y-%m-%d %H:%M")
@@ -294,7 +333,7 @@ def display_ds_evals():
             st.write(f"📍 Location: {ds_room}")
             st.write("---")
     else:
-        st.warning("No exams (DS or Evaluations) found.")
+        st.warning("No upcoming exams (DS or Evaluations) found.")
 
 
 
@@ -353,65 +392,111 @@ def add_manual_entry():
 
 
 
-def display_homework():
-    """Display all homework stored in homework.json, ensuring no duplicates are shown."""
+# def display_homework():
+    # """Display all homework stored in homework.json, ensuring no duplicates are shown."""
     
-    # Load the homework data from the JSON file
+    # # Load the homework data from the JSON file
+    # homework = load_data("homework.json")
+
+    # # Make current_time timezone-aware (adjust timezone as needed)
+    # timezone = pytz.timezone('Africa/Casablanca')
+    # current_time = datetime.now(timezone)
+
+    # # Ensure every homework entry has a 'status' field
+    # for hw in homework:
+    #     if 'status' not in hw:
+    #         hw['status'] = 'Not Done'  # Default status is 'Not Done'
+
+    # # Remove duplicates: Create a unique set based on 'subject', 'title', and 'due_date'
+    # unique_homework = []
+    # seen_entries = set()  # To keep track of seen (subject, title, due_date) combinations
+
+    # for hw in homework:
+    #     identifier = (hw['subject'], hw['title'], hw['due_date'])
+    #     if identifier not in seen_entries:
+    #         seen_entries.add(identifier)
+    #         unique_homework.append(hw)
+
+    # if unique_homework:
+    #     # Sort homework by due date and status ('Not Done' first, 'Done' last)
+    #     def sort_key(hw):
+    #         hw_due = datetime.fromisoformat(hw['due_date'])
+    #         if hw_due.tzinfo is None:
+    #             hw_due = timezone.localize(hw_due)
+    #         return (hw['status'] == 'Done', hw_due)  # 'Done' status will be sorted last
+
+    #     # Sort by status and due date
+    #     unique_homework.sort(key=sort_key)
+
+    #     st.write("### Upcoming Homework (Sorted by Date and Status)")
+
+    #     for i, hw in enumerate(unique_homework):
+    #         hw_due = datetime.fromisoformat(hw['due_date'])
+
+    #         # Ensure both hw_due and current_time are timezone-aware
+    #         if hw_due.tzinfo is None:
+    #             hw_due = timezone.localize(hw_due)
+
+    #         # Add a checkbox for homework status with unique keys using enumerate
+    #         is_done = hw.get('status', 'Not Done') == 'Done'
+    #         checkbox_label = f"{hw['subject']} - {hw['title']}"
+    #         if st.checkbox(checkbox_label, value=is_done, key=f"{hw['title']}_{i}"):
+    #             hw['status'] = 'Done'
+    #         else:
+    #             hw['status'] = 'Not Done'
+
+    #         # Display details of the homework
+    #         st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
+    #         st.write(f"Importance: {hw['importance']}")
+    #         st.write("---")
+
+    #     # Save the updated homework status back to the JSON file
+    #     save_data("homework.json", unique_homework)
+    # else:
+    #     st.warning("No upcoming homework found.")
+
+def display_homework(show_week_only=False):
+    """Display upcoming homework from 'homework.json', optionally limited to the current week."""
     homework = load_data("homework.json")
 
-    # Make current_time timezone-aware (adjust timezone as needed)
+    # Get the current date and timezone-aware time
     timezone = pytz.timezone('Africa/Casablanca')
     current_time = datetime.now(timezone)
+    end_of_week = current_time + timedelta(days=7) if show_week_only else None
 
-    # Ensure every homework entry has a 'status' field
-    for hw in homework:
-        if 'status' not in hw:
-            hw['status'] = 'Not Done'  # Default status is 'Not Done'
-
-    # Remove duplicates: Create a unique set based on 'subject', 'title', and 'due_date'
+    # Remove duplicates and add 'Not Done' default status
     unique_homework = []
-    seen_entries = set()  # To keep track of seen (subject, title, due_date) combinations
-
+    seen_entries = set()
     for hw in homework:
         identifier = (hw['subject'], hw['title'], hw['due_date'])
         if identifier not in seen_entries:
             seen_entries.add(identifier)
+            hw['status'] = hw.get('status', 'Not Done')
             unique_homework.append(hw)
 
-    if unique_homework:
-        # Sort homework by due date and status ('Not Done' first, 'Done' last)
-        def sort_key(hw):
-            hw_due = datetime.fromisoformat(hw['due_date'])
-            if hw_due.tzinfo is None:
-                hw_due = timezone.localize(hw_due)
-            return (hw['status'] == 'Done', hw_due)  # 'Done' status will be sorted last
+    # Filter and sort homework by due date and status
+    filtered_homework = []
+    for hw in unique_homework:
+        hw_due = make_timezone_aware(hw['due_date'])
+        if hw_due >= current_time and (end_of_week is None or hw_due <= end_of_week):
+            filtered_homework.append(hw)
 
-        # Sort by status and due date
-        unique_homework.sort(key=sort_key)
+    if filtered_homework:
+        filtered_homework.sort(key=lambda hw: (hw['status'] == 'Done', hw_due))
 
         st.write("### Upcoming Homework (Sorted by Date and Status)")
-
-        for i, hw in enumerate(unique_homework):
-            hw_due = datetime.fromisoformat(hw['due_date'])
-
-            # Ensure both hw_due and current_time are timezone-aware
-            if hw_due.tzinfo is None:
-                hw_due = timezone.localize(hw_due)
-
-            # Add a checkbox for homework status with unique keys using enumerate
-            is_done = hw.get('status', 'Not Done') == 'Done'
+        for i, hw in enumerate(filtered_homework):
+            is_done = hw['status'] == 'Done'
             checkbox_label = f"{hw['subject']} - {hw['title']}"
-            if st.checkbox(checkbox_label, value=is_done, key=f"{hw['title']}_{i}"):
+            if st.checkbox(checkbox_label, value=is_done, key=f"homework_{hw['title']}_{i}"):
                 hw['status'] = 'Done'
             else:
                 hw['status'] = 'Not Done'
 
-            # Display details of the homework
             st.write(f"📅 Due: {hw_due.strftime('%Y-%m-%d')}")
             st.write(f"Importance: {hw['importance']}")
             st.write("---")
 
-        # Save the updated homework status back to the JSON file
         save_data("homework.json", unique_homework)
     else:
         st.warning("No upcoming homework found.")
@@ -421,30 +506,69 @@ if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 
     
+# def main():
+#     st.title("Pronify beta ver 2.0")
+
+#     if not st.session_state["authenticated"]:
+#         if is_user_registered():
+#             login_page()
+#         else:
+#             signup_page()
+#     else:
+#         if 'scraped' not in st.session_state:
+#             st.session_state['scraped'] = False  # To track if scraping was done
+
+#         # Check if scraping is done
+#         if not st.session_state['scraped']:
+#             st.write("Scraping data...")
+#             page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
+            
+#             # Scrape DS and Evaluations
+#             fetch_and_save_ds_evals(page_source)
+
+#             # Scrape Homework
+#             fetch_and_save_homework(page_source)
+
+#             # Mark that scraping has been done in this session
+#             st.session_state['scraped'] = True
+
+#         # Create two columns for layout
+#         col1, col2 = st.columns(2)
+
+#         # Column 1: DS and Evaluations
+#         with col1:
+#             st.write("## DS and Evaluations (This Week)")
+#             display_ds_evals(show_week_only=True)  # Display only the DS/Evals for the next 7 days
+#             st.write("### Add New DS or Evaluation")
+#             # add_manual_entry()  # Uncomment to add functionality for manual DS/Eval entries
+
+#         # Column 2: Homework
+#         with col2:
+#             st.write("## Homework (This Week)")
+#             display_homework(show_week_only=True)  # Display only the homework for the next 7 days
+#             st.write("### Add New Homework")
+#             # add_manual_homework()  # Uncomment to add functionality for manual homework
+
 def main():
     st.title("Pronify beta ver 2.0")
 
-
-
-    if not st.session_state["authenticated"]:
+    # Check authentication status
+    if not st.session_state.get("authenticated", False):
         if is_user_registered():
             login_page()
         else:
             signup_page()
     else:
-
         if 'scraped' not in st.session_state:
             st.session_state['scraped'] = False  # To track if scraping was done
 
-    # Check if scraping is done
+        # Check if scraping is done
         if not st.session_state['scraped']:
             st.write("Scraping data...")
-            # Add your scraping logic here
             page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
+
             # Scrape DS and Evaluations
             fetch_and_save_ds_evals(page_source)
-            # For example: page_source = login_and_fetch_html()  # Set to True after scraping is done
-
 
             # Scrape Homework
             fetch_and_save_homework(page_source)
@@ -452,25 +576,24 @@ def main():
             # Mark that scraping has been done in this session
             st.session_state['scraped'] = True
 
-
         # Create two columns for layout
         col1, col2 = st.columns(2)
 
         # Column 1: DS and Evaluations
         with col1:
-            st.write("## DS and Evaluations")
-            display_ds_evals()  # Display the DS/Evals
+            st.write("## DS and Evaluations (This Week)")
+            display_ds_evals(show_week_only=False)  # Display only the DS/Evals for the next 7 days
             st.write("### Add New DS or Evaluation")
-            # add_manual_entry()  # Function to add manual DS/Eval entries
-
+            # Uncomment the line below to enable manual DS/Eval entries
+            # add_manual_entry()
 
         # Column 2: Homework
         with col2:
-            st.write("## Homework")
-            display_homework()  # Display the homework
+            st.write("## Homework (This Week)")
+            display_homework(show_week_only=True)  # Display only the homework for the next 7 days
             st.write("### Add New Homework")
-            # add_manual_homework()  # Form for adding manual homework
-
+            # Uncomment the line below to enable manual homework entries
+            # add_manual_homework()
 
 
 

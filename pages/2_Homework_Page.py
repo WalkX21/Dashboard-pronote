@@ -2,13 +2,11 @@ import streamlit as st
 from utils import load_json, save_json
 import dashboard
 
-# Ensure set_page_config is the first thing called
-st.set_page_config(page_title="Homework", page_icon="📓")
+st.set_page_config(page_title="Homework", page_icon="📓", layout="wide")
 
 if "authenticated" not in st.session_state or not st.session_state["authenticated"]:
     st.warning("You must be logged in to access this page.")
     st.stop()  # Stops the rest of the page from loading if not authenticated
-
 
 st.write("# Manage Homework")
 
@@ -19,7 +17,7 @@ with col1:
     st.write("## Add New Homework")
     dashboard.add_manual_homework()
 
-# Column 2: Display all Homework
+# Column 2: Display all Homework within the next week if desired
 with col2:
-    st.write("## All Homework")
-    dashboard.display_homework()
+    st.write("## Upcoming Homework")
+    dashboard.display_homework(show_week_only=True)  # Only show homework for the current week
