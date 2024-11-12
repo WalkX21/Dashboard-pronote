@@ -19,7 +19,7 @@ if section == "Descripción General":
     La *Ruta de las Kasbahs* es un camino famoso en Marruecos que conecta Marrakech con Ouarzazate. Cruza paisajes desérticos impresionantes y muestra una arquitectura bereber única, con kasbahs de tierra. Un lugar importante es *Aït Ben Haddou, con sus casas de tierra roja y decoraciones geométricas. Otra es la **Kasbah de Taourirt* en Ouarzazate, que muestra la habilidad bereber con sus muros gruesos y su resistencia al clima seco. La Ruta de las Kasbahs es una experiencia cultural que permite conocer la historia y la vida tradicional de los bereberes.
 
     """)
-    st.image("loay-pic-folder/WhatsApp Image 2024-11-01 at 20.10.51.jpeg", caption="Aït Ben Haddou")
+    st.image("/workspaces/Dashboard-pronote/loay/1.jpeg", caption="Aït Ben Haddou")
 
     st.subheader("Significado Histórico y Cultural")
     st.write("""
@@ -39,8 +39,8 @@ Para ir de Marrakech a Ouarzazate se recomienda tomar el coche aunque sea 3 hora
     st.write("""
     En Ouarzazate se recomienda visitar El museo de cinematografía de Ouarzazate y también Atlas Studios para ver cómo son realmente los paisajes de una película. Luego puedes Visitar la Kasbah de Taourirt que es muy bonita. Luego si te gusta más hacer actividades con más acción puedes hacer un viaje con un quad o un buggy en el desierto de Ouarzazate que te va a llevar a un oasis antes de volver. Si esto no es suficiente y no te molesta hacer más ruta puedes ir a Merzouga para hacer camello en el desierto de Merzouga y dormir ahí.
     """)
-    st.image("loay-pic-folder/WhatsApp Image 2024-11-02 at 20.21.51.jpeg", caption="Paisaje Desértico a lo largo de la Ruta")
-    st.image("loay-pic-folder/WhatsApp Image 2024-11-02 at 20.21.59.jpeg")
+    st.image("/workspaces/Dashboard-pronote/loay/2.jpeg", caption="Paisaje Desértico a lo largo de la Ruta")
+    st.image("/workspaces/Dashboard-pronote/loay/3.jpeg")
 
 # Sección 4: Mapa Interactivo con Detalles Geográficos
 elif section == "Mapa Interactivo":
