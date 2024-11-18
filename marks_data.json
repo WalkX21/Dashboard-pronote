@@ -1,0 +1,110 @@
+[
+    {
+        "date": "11-12",
+        "subject": "ANGLAIS > Compréhension écrite",
+        "class_average": "8,80",
+        "user_mark": "8,75"
+    },
+    {
+        "date": "11-12",
+        "subject": "ANGLAIS > Expression écrite",
+        "class_average": "10,52",
+        "user_mark": "12,00"
+    },
+    {
+        "date": "11-11",
+        "subject": "ARABE > Compréhension écrite",
+        "class_average": "19,18",
+        "user_mark": "19,00"
+    },
+    {
+        "date": "11-11",
+        "subject": "ARABE > Expression écrite",
+        "class_average": "13,92",
+        "user_mark": "12,00"
+    },
+    {
+        "date": "11-07",
+        "subject": "HISTOIRE-GEOGRAPHIE",
+        "class_average": "13,46",
+        "user_mark": "16,00"
+    },
+    {
+        "date": "11-07",
+        "subject": "PHYSIQUE-CHIMIE",
+        "class_average": "11,89",
+        "user_mark": "14,00/19"
+    },
+    {
+        "date": "11-04",
+        "subject": "ARABE > Compréhension orale",
+        "class_average": "17,96",
+        "user_mark": "17,00"
+    },
+    {
+        "date": "11-04",
+        "subject": "ENSEIGN.SCIENTIFIQUE > ENSEIGN.SCIENTIFIQUE",
+        "class_average": "8,19",
+        "user_mark": "7,50/10"
+    },
+    {
+        "date": "10-22",
+        "subject": "ENSEIGN.SCIENTIFIQUE > ENSEIGN.SCIENTIFIQUE",
+        "class_average": "15,68",
+        "user_mark": "11,00"
+    },
+    {
+        "date": "10-17",
+        "subject": "PHYSIQUE-CHIMIE",
+        "class_average": "17,91",
+        "user_mark": "18,00"
+    },
+    {
+        "date": "10-16",
+        "subject": "MATHEMATIQUES",
+        "class_average": "13,04",
+        "user_mark": "18,50"
+    },
+    {
+        "date": "10-11",
+        "subject": "FRANCAIS",
+        "class_average": "14,00",
+        "user_mark": "14,00"
+    },
+    {
+        "date": "10-09",
+        "subject": "ANGLAIS > Expression écrite",
+        "class_average": "12,15",
+        "user_mark": "15,50"
+    },
+    {
+        "date": "10-08",
+        "subject": "NUMERIQUE SC.INFORM.",
+        "class_average": "13,35",
+        "user_mark": "18,00"
+    },
+    {
+        "date": "10-01",
+        "subject": "MATHEMATIQUES",
+        "class_average": "12,34",
+        "user_mark": "17,50"
+    },
+    {
+        "date": "09-27",
+        "subject": "HISTOIRE-GEOGRAPHIE",
+        "class_average": "8,50",
+        "user_mark": "9,50/10"
+    },
+    {
+        "date": "09-26",
+        "subject": "PHYSIQUE-CHIMIE",
+        "class_average": "6,52",
+        "user_mark": "18,00"
+    },
+    {
+        "date": "09-19",
+        "subject": "PHYSIQUE-CHIMIE",
+        "class_average": "17,50",
+        "user_mark": "16,00"
+    }
+]

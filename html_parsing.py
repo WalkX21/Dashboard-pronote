@@ -45,7 +45,7 @@ def inspect_html_sections(page_source):
     timezone = pytz.timezone('Africa/Casablanca')  # Set to Morocco's time zone
 
     # Parse DS Section (id_73 for Devoirs sur table)
-    ds_section = soup.find("div", {"id": "id_73"})
+    ds_section = soup.find("div", {"id": "id_235"})
     if ds_section:
         ds_items = ds_section.find_all("li")
         for ds_item in ds_items:
@@ -67,7 +67,8 @@ def inspect_html_sections(page_source):
             })
 
     # Parse Evaluation de Compétence Section (id_74)
-    eval_section = soup.find("div", {"id": "id_74"})
+    # eval_section = soup.find("div", {"id": "id_74"})
+    eval_section = soup.find("div", {"id": "id_236"})
     if eval_section:
         eval_items = eval_section.find_all("li")
         for eval_item in eval_items:
@@ -98,7 +99,7 @@ def scrape_ds_evals(page_source):
     ds_evals_list = []
 
     # Locate the DS section and Evaluation section in the HTML (adjust IDs if necessary)
-    ds_section = soup.find("section", {"id": "id_69"})  # Adjust the ID if needed for DS
+    ds_section = soup.find("section", {"id": "id_235"})  # Adjust the ID if needed for DS
     if ds_section:
         ds_items = ds_section.find_all("li")
         for ds_item in ds_items:
@@ -120,7 +121,7 @@ def scrape_ds_evals(page_source):
             })
 
     # Do the same for Evaluations if they have a separate section
-    eval_section = soup.find("section", {"id": "id_74"})  # Adjust the ID if needed for Evaluations
+    eval_section = soup.find("section", {"id": "id_236"})  # Adjust the ID if needed for Evaluations
     if eval_section:
         eval_items = eval_section.find_all("li")
         for eval_item in eval_items:
@@ -142,14 +143,41 @@ def scrape_ds_evals(page_source):
 
     return ds_evals_list
 
+# def fetch_and_save_ds_evals(page_source):
+#     """Fetch DS and Evaluations and save to ds_evals.json."""
+#     ds_evals_list = scrape_ds_evals(page_source)
+
+#     # Load existing data to avoid overwriting
+#     current_ds_evals = load_data(DS_EVAL_FILE)
+
+#     # Add new DS/Evaluations entries, avoid duplicates
+#     for ds in ds_evals_list:
+#         if ds not in current_ds_evals:
+#             current_ds_evals.append(ds)
+
+#     # Save updated DS/Evaluations data
+#     save_data(DS_EVAL_FILE, current_ds_evals)
+
+
 def fetch_and_save_ds_evals(page_source):
     """Fetch DS and Evaluations and save to ds_evals.json."""
-    ds_evals_list = scrape_ds_evals(page_source)
+    
+    # Check if page_source is valid
+    if page_source is None:
+        print("Error: No page source received for DS/Evaluations parsing.")
+        return  # Stop further processing if page source is invalid
+
+    try:
+        # Attempt to parse DS/Evaluations
+        ds_evals_list = scrape_ds_evals(page_source)
+    except Exception as e:
+        print(f"An error occurred while parsing DS/Evaluations: {e}")
+        return
 
     # Load existing data to avoid overwriting
     current_ds_evals = load_data(DS_EVAL_FILE)
 
-    # Add new DS/Evaluations entries, avoid duplicates
+    # Add new DS/Evaluations entries, avoiding duplicates
     for ds in ds_evals_list:
         if ds not in current_ds_evals:
             current_ds_evals.append(ds)

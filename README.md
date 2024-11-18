@@ -1,118 +1,94 @@
 # Dashboard-pronote
+Wanna do your academic comeback but you're not organized asf, this ai/webscrapping powered app will help get better by getting itself better and better with time (machine learning 😉)
 
-Do you want to improve your academic organization but struggle to keep everything in order? This AI-powered, web-scraping app aims to help you get organized by automating the process of collecting, displaying, and managing your school tasks. As time goes on, the app will keep getting better, thanks to machine learning! 😉
-
-## Application Overview
-
-This app scrapes data from Pronote (your school management system) to help you manage DS (tests), evaluations, and homework assignments. It also provides a dashboard to help you track and organize your tasks in a user-friendly way.
-
-### Folder Structure
-
-```bash
 app/
 │
 ├── main.py                 # Main file to run the application
-├── auth.py                 # Handles authentication (e.g., login to Pronote)
-├── utils.py                # Utility functions (e.g., human typing simulation, event comparison)
-├── dashboard.py            # Dashboard rendering logic
-├── homework_scraping.py     # Homework scraping logic
-├── html_parsing.py          # HTML parsing and data extraction from Pronote
+├── auth.py                 # Handles authentication (e.g., login)
+├── utils.py                # Utility functions (e.g., human typing, event comparison)
+├── dashboard.py 
+├──homework_scraping.py
+├── html_parsing.py         # HTML parsing and data extraction
 └── config.json             # Configuration file for credentials
 
-Features Completed
-1. Pronote Authentication & Web Scraping
 
-Selenium Bot: Created a Selenium bot to log into Pronote, retrieve the necessary HTML for authentication, and scrape data.
-Files: auth.py, utils.py
-Status: ✅ Completed
 
-HTML Parsing: Successfully parsed the HTML files to extract DS (tests) and evaluation data.
-File: html_parsing.py
-Status: ✅ Completed
+Things done:
+    -- Créer un bot selenium et se loger sur pronote pour récupérer le fichier html ==> auth.py & utils.py✅
+    --parsing the html files to get the datas of ds ==> html_parsing.py✅
+    --having a website to see all the datas ==> dashboard.py✅
 
-2. Dashboard for Displaying Data
 
-Web Interface: A basic web dashboard is set up to display all the DS and evaluation data retrieved from Pronote.
-File: dashboard.py
-Status: ✅ Completed
+things to get done:
+    - webscrap evaluation(id_70) and ds (id_69) (both) and store in the same place DONE✅
+    - being able to add new ds events, will also be stored in that same place ✅ but new ds stored manually are not shown if app is restarted ==> problem solved succesfully ✅
+        ==> sidebar (add new events, scroll) + collonms in dashboard✅
+        - champs à remplir:✅
+            -type ✅
+            - when ?✅
+            -title✅
+            -where✅
+            - + add a date sorting in the dictionnary when added in it (new events should not be added at end but in function of time) ==>done ✅
+    
+    - how to deploy my application in the web
+        - how to scrape using docker ?
+        - une 2eme machine ?
+        -lancement programmé et/ou codespace ? 
 
-3. Manual Event Input & Sorting
+    NOTIFICATION ON DISCORD, best in a server or en privé ==> to get the developper badge
 
-Add New Events: Users can manually add new DS events (type, date, title, location) through the dashboard, and these are automatically sorted based on time, not just added at the end.
-Features: Sidebar navigation, input fields for DS events (type, date, title, location), automatic sorting
-Status: ✅ Completed
 
-4. Homework Management
+    - homework part handling (scrapping + adding manually)✅
+        - analyse class id of the homework in pronote✅
+        - scrapping and handling that data to get a json maybe file with all the homework✅
+        - same thing as for the ds, user must be able to add a homework manually.✅
+        -puting all things in different collomn ✅
 
-Homework Scraping: Successfully scraped homework data from Pronote and stored it in a JSON file.
-File: homework_scraping.py
-Status: ✅ Completed
+    WORK ON UI/UX 
 
-Manual Homework Entry: Users can also manually add new homework assignments, which will be displayed alongside the scraped data.
-Status: ✅ Completed
+    - notifications when new homework/ ds, when new mark (this may be cool if fast)
+        - notification par mail
+        -
+    - working on a more dynamic dashboard 
+    
 
-5. Notifications (In Progress)
+    Ideas:
+        -working on UI: work on getting a main page that shows the main ds and homework ect for the next days, for the others ds ect (some ds are written in pronote for in a lot of time) ==> work on a multipage app (see streamlit documentation)
+            -page accueil with only the main shits, should not be that long, should be clear, small shortcut for adding manual ds or homework ==> button leads to a page to add things==> helps free up space in accueil page
+            -ds page: shows the details of the nexts ds and evaluations, (maybe when showing things for a bit in acceuil show only the title and a button see more infos ==> leading to the ds page), shows infos, place to add ds if we want to
+            -homework page: as the ds page, shows more infos about the homeworks ect + being able to add (same thinking as in ds)
 
-Discord Notifications: The goal is to notify users on Discord when new DS, homework, or evaluation results are available, either via a private message or in a Discord server.
-Status: 🔄 In Progress
 
-Features in Progress
 
-1. Scraping Additional Data
+Objectif of the app:
+    -helping me getting more organized, having my own students dashboard that helps me get organized and tells me what to do with ai analysis:
+        -WEB SCRAPPING of the ds, evaluation, homework
+        -Display or the ds and evaluations
+        -Being able to add manual ds or evaluation
+        -Display the homeworks
+        -Being able to add manual homework
+        -Having a multipage app with: navigate through sidebar
+            -an accueil page with the main next ds and homework in two collomns, being able to click a button 'see more' or 'get more infos' to see the details of the homework and ds/evaluation
+            -Ds page for displaying details of the ds and evaluations + being able to add manual entries there
+            -Homework page with the main homework ect + manual add ect
+            -when you went to add a ds (add ds page) or a homework (add homework page) ==> open a page, kind of pop up, to add the things; Those pages are not shown in the sidebar
+            -Basic Stat Analysis in the acceuil with non-ai-powered charts (just datas like number of homework per week ect) ==> needs to restructure the database or the way data is stored 💀
+        -Ai part handling: 
+            -time to get things done estimation from level analysis from marks and past homework (all the main analysis are going to be maid not each lauching time but just the first time (like a 'we're setting up your workspace))
+            -lauching a work session (being able to check ds/evaluation revised and homework done, with setting the time it took you for each time) ==> machine learning, time estimation modification from what the ai learns
+            -if enough information for the ia, order of things to get done, proposed by the ai
+            -humor handling in time estimation
+            ...
+        -Account and connection handling:
+            -register page + detect that it's your first time here to set up all the things, setting up the pronote ids here, if you have a doubt, maybe a button (i'm not sure if my pronote ids are good), that summon a bot to check things by trying to connect.
+            -login page
+                -when you connect, humor tracker as every new connection asking to check your humor with maybe 2/3 quesions with sliders or just emojies
 
-Evaluations & DS: Extend the scraping functionality to capture both evaluation (id_70) and DS (id_69) data and store them in a unified structure.
-Status: ✅ Completed
+    - id of conection, same as id of pronote when registering
+        -think about ways to register/login
+        -do not ask for humor without being registered/loged in
 
-2. Dashboard Enhancements
 
-Dynamic Dashboard: Improve the UI/UX by making the dashboard more dynamic, responsive, and user-friendly. This includes adding a main page that only shows the next upcoming DS and homework in a clean, concise format, with options to view more details.
-Status: 🔄 In Progress
+// si case 'deja fait' est coché, il n'ya plus d'objct à srape, aranger le code pr que si le travail a été coché sur pronote
+les choses soit répercuté sur le dashboard (maybe work on l'inverse (à voir si je fais pas un bot qui va apuyer sur le bouton or idk))
 
-3. Homework Notifications
-
-Email Notifications: Implement email notifications to alert users when new homework or DS is added or when a new mark is received.
-Status: 🔄 Planned
-
-Upcoming Features & To-Do
-
-1. Further Deployment Considerations
-
-Docker Integration: Explore deploying the application using Docker, potentially running on a second machine.
-
-Automated Scraping: Look into scheduling the web scraping process, either through a programmatic launch or using GitHub Codespaces.
-
-2. User Account & Login Management
-
-Register & Login Pages: Set up account creation and login functionality, allowing users to manage their dashboards. Upon first login, users will input their Pronote credentials.
-Pronote ID will serve as the login ID.
-Humor Tracker: Upon login, the app will ask users to rate their mood (via sliders or emojis). This feature will help train the AI to give better productivity recommendations over time.
-Status: 🔄 Planned
-
-Ideas for Future Improvements:
-
-1. Enhanced User Interface (UI)
-Main Page (Accueil): Create a main page that shows the most relevant tasks (e.g., next DS and homework). This page will be minimalistic but include shortcuts for adding new events.
-Multipage Navigation: Allow users to navigate between different pages (e.g., DS page, Homework page) using a sidebar.
-DS Page: Display detailed information about upcoming DS and evaluations. Users can also manually add DS here.
-Homework Page: Similar to the DS page, but focused on homework assignments.
-
-2. Basic Analytics
-Stats on Dashboard: Show simple, non-AI-powered statistics, such as the number of homework assignments due each week or the time taken for past assignments.
-Database Restructuring: This feature will require reorganizing how data is stored.
-
-3. AI-Powered Features (Planned)
-Time Estimation & Task Management: Use machine learning to analyze your past performance and estimate how long it will take to complete upcoming tasks (DS, homework, evaluations).
-AI will suggest an order for completing tasks based on time estimates and deadlines.
-Work Session Tracking: Let users log time spent on DS/homework. Over time, the AI will refine its time estimates based on actual completion times.
-The AI will incorporate humor-based analysis to make these estimates more personalized (e.g., humor might affect how much time the AI thinks you'll need).
-Goals of the Application
-
-This app aims to help students stay organized and improve their productivity by offering:
-
-Automated Data Gathering: Web scraping for DS, evaluations, and homework assignments.
-
-Manual Task Entry: Allowing users to manually input and manage their academic tasks.
-
-Multipage Dashboard: A clean, organized interface that lets users navigate through different sections like DS, homework, and stats.
-
-AI-Powered Insights: Personalized recommendations and time estimates to help users prioritize and plan their tasks.

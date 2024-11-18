@@ -13,6 +13,68 @@ from utils import save_json, load_json
 
 from utils import save_data, load_data, make_timezone_aware, human_typing, events_are_equal
 
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.common.action_chains import ActionChains
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
+# from datetime import datetime
+# import time
+
+# def login_and_fetch_marks():
+#     # Step 1: Login to Pronote
+#     driver = login_and_fetch_html()  # Assuming this function logs in and returns a driver instance
+    
+#     try:
+#         # Step 2: Navigate to Marks page by clicking the button
+#         # Wait until the button is clickable and then click it
+#         marks_button = WebDriverWait(driver, 10).until(
+#             EC.element_to_be_clickable((By.ID, "id_521id_45"))
+#         )
+#         marks_button.click()
+#         time.sleep(3)  # Wait for the page to load; adjust as needed based on loading times
+
+#         # Step 3: Extract marks data
+#         marks_data = []
+#         index = 0
+#         while True:
+#             try:
+#                 # Locate each grid entry
+#                 date_element = driver.find_element(By.XPATH, f"//div[@id='GInterface.Instances[2].Instances[1]_0_{index}_fdz_2']/time")
+#                 subject_element = driver.find_element(By.XPATH, f"//div[@id='GInterface.Instances[2].Instances[1]_0_{index}_fdz_4']")
+#                 class_average_element = driver.find_element(By.XPATH, f"//div[@id='GInterface.Instances[2].Instances[1]_0_{index}_fdz_5']/span")
+#                 user_mark_element = driver.find_element(By.XPATH, f"//div[@id='GInterface.Instances[2].Instances[1]_0_{index}_fdz_6']/span[@class='note-devoir']")
+
+#                 # Extract text from each element
+#                 date = date_element.get_attribute("datetime")  # ISO format
+#                 subject = subject_element.text
+#                 class_average = class_average_element.text.split(":")[1].strip()  # "Moyenne classe : 8,17" -> "8,17"
+#                 user_mark = user_mark_element.text.replace(",", ".")  # Convert to "7.5" format if needed
+
+#                 # Append to list
+#                 marks_data.append({
+#                     "date": date,
+#                     "subject": subject,
+#                     "class_average": class_average,
+#                     "user_mark": user_mark
+#                 })
+                
+#                 # Print extracted data for debugging
+#                 print(f"Date: {date}, Subject: {subject}, Class Average: {class_average}, User Mark: {user_mark}")
+                
+#                 # Increment index to move to the next entry
+#                 index += 1
+#             except Exception as e:
+#                 # If no further entries are found, break out of the loop
+#                 print(f"No more marks found or an error occurred: {e}")
+#                 break
+
+#     finally:
+#         # Close the driver after completion
+#         driver.quit()
+
+#     return marks_data  # Returning the data if needed for further processing
+
 st.set_page_config(page_title="Accueil", page_icon="📚", layout="wide")
 
 # Define the path to the JSON file for storing DS and Evaluations
@@ -330,8 +392,9 @@ def main():
         # Check if scraping is done
         if not st.session_state['scraped']:
             st.write("Scraping data...")
-            page_source = login_and_fetch_html()  # Perform web scraping (logging into Pronote)
-
+            # page_source = login_and_fetch_html() 
+            #  # Perform web scraping (logging into Pronote)
+            page_source, driver = login_and_fetch_html()
             # Scrape DS and Evaluations
             fetch_and_save_ds_evals(page_source)
 
@@ -347,7 +410,7 @@ def main():
         # Column 1: DS and Evaluations
         with col1:
             st.write("## DS and Evaluations (This Week)")
-            display_ds_evals(show_week_only=False)  # Display only the DS/Evals for the next 7 days
+            display_ds_evals(show_week_only=True)  # Display only the DS/Evals for the next 7 days
             
             # Uncomment the line below to enable manual DS/Eval entries
             # add_manual_entry()
