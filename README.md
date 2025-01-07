@@ -1,58 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard-Pronote</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-        }
-        .announcement {
-            background-color: #ffcccc;
-            border: 1px solid #ff0000;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            color: #660000;
-            font-weight: bold;
-        }
-        .section {
-            margin-bottom: 2rem;
-        }
-        h1, h2, h3 {
-            color: #333333;
-        }
-        ul {
-            margin: 0;
-            padding-left: 1.5rem;
-        }
-        ul li {
-            margin-bottom: 0.5rem;
-        }
-        .checklist li::before {
-            content: "✅ ";
-            color: green;
-        }
-        .in-progress li::before {
-            content: "🟡 ";
-            color: orange;
-        }
-        .ideas li::before {
-            content: "💡 ";
-            color: blue;
-        }
-        .code-block {
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            padding: 1rem;
-            border-radius: 5px;
-            font-family: monospace;
-            overflow-x: auto;
-        }
-    </style>
-</head>
+
 <body>
 
 <div class="announcement">
