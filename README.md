@@ -31,30 +31,25 @@
 
 <div class="section">
     <h2>✅ Features & Progress</h2>
-    <h3>📂 Completed Tasks</h3>
-    <ul class="checklist">
-        <li>Selenium bot for Pronote login and HTML scraping (auth.py & utils.py).</li>
-        <li>Parsing HTML for exam (DS) data (html_parsing.py).</li>
-        <li>Website for viewing scraped data (dashboard.py).</li>
-        <li>Scraping and storing evaluations (ID_70) and exams (ID_69).</li>
-        <li>Adding manual events to the dashboard and sorting by date.</li>
-        <li>Homework scraping and manual additions.</li>
-        <li>Improved dashboard layout: Separate columns for DS and homework.</li>
-    </ul>
+    
+#### 📂 Completed Tasks
+- Selenium bot for Pronote login and HTML scraping (auth.py & utils.py).
+- Parsing HTML for exam (DS) data (html_parsing.py).
+- Website for viewing scraped data (dashboard.py).
+- Scraping and storing evaluations (ID_70) and exams (ID_69).
+- Adding manual events to the dashboard and sorting by date.
+- Homework scraping and manual additions.
+- Improved dashboard layout: Separate columns for DS and homework.
 
-    <h3>🚧 Work in Progress</h3>
-    <ul class="in-progress">
-        <li>Deployment: Investigate Docker or multi-machine setup for deployment.</li>
-        <li>Notifications: Set up alerts for new homework, DS, or grades (email or Discord).</li>
-        <li>Dynamic Dashboard: Enhance UX/UI for a smoother user experience.</li>
-    </ul>
+#### 🚧 Work in Progress
+- Deployment: Investigate Docker or multi-machine setup for deployment.
+- Notifications: Set up alerts for new homework, DS, or grades (email or Discord).
+- Dynamic Dashboard: Enhance UX/UI for a smoother user experience.
 
-    <h3>💡 Ideas</h3>
-    <ul class="ideas">
-        <li>Multipage app with dedicated sections for DS and Homework.</li>
-        <li>AI-based insights: Predict time required for tasks based on past performance.</li>
-        <li>Suggest task priorities and schedules based on AI analysis.</li>
-    </ul>
+#### 💡 Ideas
+- Multipage app with dedicated sections for DS and Homework.
+- AI-based insights: Predict time required for tasks based on past performance.
+- Suggest task priorities and schedules based on AI analysis.
 </div>
 
 <div class="section">
@@ -79,19 +74,15 @@
         <li>Manual addition support for DS/homework.</li>
     </ul>
 
-    <h3>🔧 Enhancements</h3>
-    <ul class="in-progress">
-        <li>AI time estimation for tasks.</li>
-        <li>Dynamic dashboard with charts and navigation.</li>
-        <li>User-friendly UI/UX improvements.</li>
-        <li>Notifications for updates (email/Discord).</li>
-    </ul>
+#### 🔧 Enhancements
+- AI time estimation for tasks.
+- Dynamic dashboard with charts and navigation.
+- User-friendly UI/UX improvements.
+- Notifications for updates (email/Discord).
 
-    <h3>🌐 Deployment</h3>
-    <ul class="in-progress">
-        <li>Research Docker/Multi-machine deployment.</li>
-        <li>Explore scheduled launches or Codespace integration.</li>
-    </ul>
+#### 🌐 Deployment
+- Research Docker/Multi-machine deployment.
+- Explore scheduled launches or Codespace integration.
 </div>
 
 </body>
