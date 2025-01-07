@@ -1,94 +1,150 @@
-# Dashboard-pronote
-Wanna do your academic comeback but you're not organized asf, this ai/webscrapping powered app will help get better by getting itself better and better with time (machine learning 😉)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard-Pronote</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .announcement {
+            background-color: #ffcccc;
+            border: 1px solid #ff0000;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            color: #660000;
+            font-weight: bold;
+        }
+        .section {
+            margin-bottom: 2rem;
+        }
+        h1, h2, h3 {
+            color: #333333;
+        }
+        ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+        ul li {
+            margin-bottom: 0.5rem;
+        }
+        .checklist li::before {
+            content: "✅ ";
+            color: green;
+        }
+        .in-progress li::before {
+            content: "🟡 ";
+            color: orange;
+        }
+        .ideas li::before {
+            content: "💡 ";
+            color: blue;
+        }
+        .code-block {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            border-radius: 5px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
 
-app/
-│
-├── main.py                 # Main file to run the application
-├── auth.py                 # Handles authentication (e.g., login)
-├── utils.py                # Utility functions (e.g., human typing, event comparison)
-├── dashboard.py 
-├──homework_scraping.py
-├── html_parsing.py         # HTML parsing and data extraction
-└── config.json             # Configuration file for credentials
+<div class="announcement">
+    🚨 <strong>Important Announcement:</strong><br>
+    This project has been discontinued due to the emergence of similar applications like <i>Papillon</i>. 
+    While <i>Papillon</i> lacks AI capabilities, it fulfills the core functionalities I envisioned for this app.
+    Additionally, the frequent updates required made it unviable to maintain. Thank you for your support and interest!
+</div>
 
+<div class="section">
+    <h1>📘 Dashboard-Pronote</h1>
+    <p>Are you struggling to stay organized with your academic tasks? This <strong>AI/Webscraping powered app</strong> aims to simplify your life by organizing your schedule and improving over time through <strong>machine learning</strong>!</p>
+</div>
 
+<div class="section">
+    <h2>🔩 Project Structure</h2>
+    <div class="code-block">
+<pre>app/
+├── main.py                # Main file to run the application
+├── auth.py                # Handles authentication (e.g., login)
+├── utils.py               # Utility functions (e.g., human typing, event comparison)
+├── dashboard.py           # Dashboard rendering logic
+├── homework_scraping.py   # Homework scraping functionality
+├── html_parsing.py        # HTML parsing and data extraction
+└── config.json            # Configuration file for credentials</pre>
+    </div>
+</div>
 
-Things done:
-    -- Créer un bot selenium et se loger sur pronote pour récupérer le fichier html ==> auth.py & utils.py✅
-    --parsing the html files to get the datas of ds ==> html_parsing.py✅
-    --having a website to see all the datas ==> dashboard.py✅
+<div class="section">
+    <h2>✅ Features & Progress</h2>
+    <h3>📂 Completed Tasks</h3>
+    <ul class="checklist">
+        <li>Selenium bot for Pronote login and HTML scraping (auth.py & utils.py).</li>
+        <li>Parsing HTML for exam (DS) data (html_parsing.py).</li>
+        <li>Website for viewing scraped data (dashboard.py).</li>
+        <li>Scraping and storing evaluations (ID_70) and exams (ID_69).</li>
+        <li>Adding manual events to the dashboard and sorting by date.</li>
+        <li>Homework scraping and manual additions.</li>
+        <li>Improved dashboard layout: Separate columns for DS and homework.</li>
+    </ul>
 
+    <h3>🚧 Work in Progress</h3>
+    <ul class="in-progress">
+        <li>Deployment: Investigate Docker or multi-machine setup for deployment.</li>
+        <li>Notifications: Set up alerts for new homework, DS, or grades (email or Discord).</li>
+        <li>Dynamic Dashboard: Enhance UX/UI for a smoother user experience.</li>
+    </ul>
 
-things to get done:
-    - webscrap evaluation(id_70) and ds (id_69) (both) and store in the same place DONE✅
-    - being able to add new ds events, will also be stored in that same place ✅ but new ds stored manually are not shown if app is restarted ==> problem solved succesfully ✅
-        ==> sidebar (add new events, scroll) + collonms in dashboard✅
-        - champs à remplir:✅
-            -type ✅
-            - when ?✅
-            -title✅
-            -where✅
-            - + add a date sorting in the dictionnary when added in it (new events should not be added at end but in function of time) ==>done ✅
-    
-    - how to deploy my application in the web
-        - how to scrape using docker ?
-        - une 2eme machine ?
-        -lancement programmé et/ou codespace ? 
+    <h3>💡 Ideas</h3>
+    <ul class="ideas">
+        <li>Multipage app with dedicated sections for DS and Homework.</li>
+        <li>AI-based insights: Predict time required for tasks based on past performance.</li>
+        <li>Suggest task priorities and schedules based on AI analysis.</li>
+    </ul>
+</div>
 
-    NOTIFICATION ON DISCORD, best in a server or en privé ==> to get the developper badge
+<div class="section">
+    <h2>🎯 Objectives</h2>
+    <p>This app is designed to <strong>help students</strong> stay organized with a personalized dashboard for:</p>
+    <ul>
+        <li>Scraping academic data (DS, evaluations, homework).</li>
+        <li>Displaying these in a clean, dynamic interface.</li>
+        <li>Allowing manual additions for custom events.</li>
+        <li>AI-driven analysis for time estimation and task prioritization.</li>
+        <li>Notifications via <strong>email/Discord</strong> for updates.</li>
+    </ul>
+</div>
 
+<div class="section">
+    <h2>📝 Checklist View</h2>
+    <h3>🟢 Core Features</h3>
+    <ul class="checklist">
+        <li>Pronote Login (Selenium Bot).</li>
+        <li>Scrape DS/evaluation data.</li>
+        <li>Scrape homework data.</li>
+        <li>Manual addition support for DS/homework.</li>
+    </ul>
 
-    - homework part handling (scrapping + adding manually)✅
-        - analyse class id of the homework in pronote✅
-        - scrapping and handling that data to get a json maybe file with all the homework✅
-        - same thing as for the ds, user must be able to add a homework manually.✅
-        -puting all things in different collomn ✅
+    <h3>🔧 Enhancements</h3>
+    <ul class="in-progress">
+        <li>AI time estimation for tasks.</li>
+        <li>Dynamic dashboard with charts and navigation.</li>
+        <li>User-friendly UI/UX improvements.</li>
+        <li>Notifications for updates (email/Discord).</li>
+    </ul>
 
-    WORK ON UI/UX 
+    <h3>🌐 Deployment</h3>
+    <ul class="in-progress">
+        <li>Research Docker/Multi-machine deployment.</li>
+        <li>Explore scheduled launches or Codespace integration.</li>
+    </ul>
+</div>
 
-    - notifications when new homework/ ds, when new mark (this may be cool if fast)
-        - notification par mail
-        -
-    - working on a more dynamic dashboard 
-    
-
-    Ideas:
-        -working on UI: work on getting a main page that shows the main ds and homework ect for the next days, for the others ds ect (some ds are written in pronote for in a lot of time) ==> work on a multipage app (see streamlit documentation)
-            -page accueil with only the main shits, should not be that long, should be clear, small shortcut for adding manual ds or homework ==> button leads to a page to add things==> helps free up space in accueil page
-            -ds page: shows the details of the nexts ds and evaluations, (maybe when showing things for a bit in acceuil show only the title and a button see more infos ==> leading to the ds page), shows infos, place to add ds if we want to
-            -homework page: as the ds page, shows more infos about the homeworks ect + being able to add (same thinking as in ds)
-
-
-
-Objectif of the app:
-    -helping me getting more organized, having my own students dashboard that helps me get organized and tells me what to do with ai analysis:
-        -WEB SCRAPPING of the ds, evaluation, homework
-        -Display or the ds and evaluations
-        -Being able to add manual ds or evaluation
-        -Display the homeworks
-        -Being able to add manual homework
-        -Having a multipage app with: navigate through sidebar
-            -an accueil page with the main next ds and homework in two collomns, being able to click a button 'see more' or 'get more infos' to see the details of the homework and ds/evaluation
-            -Ds page for displaying details of the ds and evaluations + being able to add manual entries there
-            -Homework page with the main homework ect + manual add ect
-            -when you went to add a ds (add ds page) or a homework (add homework page) ==> open a page, kind of pop up, to add the things; Those pages are not shown in the sidebar
-            -Basic Stat Analysis in the acceuil with non-ai-powered charts (just datas like number of homework per week ect) ==> needs to restructure the database or the way data is stored 💀
-        -Ai part handling: 
-            -time to get things done estimation from level analysis from marks and past homework (all the main analysis are going to be maid not each lauching time but just the first time (like a 'we're setting up your workspace))
-            -lauching a work session (being able to check ds/evaluation revised and homework done, with setting the time it took you for each time) ==> machine learning, time estimation modification from what the ai learns
-            -if enough information for the ia, order of things to get done, proposed by the ai
-            -humor handling in time estimation
-            ...
-        -Account and connection handling:
-            -register page + detect that it's your first time here to set up all the things, setting up the pronote ids here, if you have a doubt, maybe a button (i'm not sure if my pronote ids are good), that summon a bot to check things by trying to connect.
-            -login page
-                -when you connect, humor tracker as every new connection asking to check your humor with maybe 2/3 quesions with sliders or just emojies
-
-    - id of conection, same as id of pronote when registering
-        -think about ways to register/login
-        -do not ask for humor without being registered/loged in
-
-
-// si case 'deja fait' est coché, il n'ya plus d'objct à srape, aranger le code pr que si le travail a été coché sur pronote
-les choses soit répercuté sur le dashboard (maybe work on l'inverse (à voir si je fais pas un bot qui va apuyer sur le bouton or idk))
-
+</body>
+</html>
